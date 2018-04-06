@@ -1,32 +1,9 @@
-const Gem = function(x, y) {
-  this.x = x;
-  this.y = y;
-  this.id = allGems.push(this) - 1;
-  this.sprite = Resources.get('images/gem-' + ['blue', 'orange', 'green'][Math.floor(Math.random() * 3)] + '.png');
-} 
-
-Gem.prototype.kill = function () {
-  // The delete keyword, in this case, will remove the Enemy object from
-  // the allEnemies array. This method ensures that the array length will
-  // remain the same after an Enemy is deleted, and that there won't be
-  //  an issue with assigning ids.
-  score += 50;
-  delete allGems[this.id];
-};
-
-Gem.prototype.render = function () {
-  // The canvas is cleared and the entities and map are redrawn everytime
-  // the window requests another animation frames. This function is called
-  // at such a time and draws the Enemy's sprite, at the Enemy's current
-  // position. The sprite is kept the same throughout so no variables
-  // are used.
-  ctx.drawImage(this.sprite, this.x + this.sprite.width/5, this.y - this.sprite.height/10, this.sprite.width/2, this.sprite.height/2);
-};
-
 const Enemy = function (x, y, floor, multiplicity) {
   // The x argument is stored in the Enemy object.
+  // It is the enemy's horizontal position.
   this.x = x;
   // The y argument is stored in the Enemy object.
+  // It is the enemy's vertical position.
   this.y = y;
   // 10 is multiplied by a random number, from 0 to 1, so the Enemy's
   // velocity varies and isn't always the same, and the product is added
@@ -68,6 +45,31 @@ Enemy.prototype.update = function (dt) {
   this.x <= ctx.canvas.width ? this.x += (dt * this.velocity * 5) : this.kill();
 };
 
+const Gem = function (x, y) {
+  this.x = x;
+  this.y = y;
+  this.id = allGems.push(this) - 1;
+  this.sprite = Resources.get('images/gem-' + ['blue', 'orange', 'green'][Math.floor(Math.random() * 3)] + '.png');
+}
+
+Gem.prototype.kill = function () {
+  // The delete keyword, in this case, will remove the Enemy object from
+  // the allEnemies array. This method ensures that the array length will
+  // remain the same after an Enemy is deleted, and that there won't be
+  //  an issue with assigning ids.
+  score += 50;
+  delete allGems[this.id];
+};
+
+Gem.prototype.render = function () {
+  // The canvas is cleared and the entities and map are redrawn everytime
+  // the window requests another animation frames. This function is called
+  // at such a time and draws the Enemy's sprite, at the Enemy's current
+  // position. The sprite is kept the same throughout so no variables
+  // are used.
+  ctx.drawImage(this.sprite, this.x + this.sprite.width / 5, this.y - this.sprite.height / 10, this.sprite.width / 2, this.sprite.height / 2);
+};
+
 const Player = function (sprite) {
   // Whenever a new Player is made, it will always be spawned at the same
   // position in the bottom corner of the map.
@@ -87,6 +89,11 @@ Player.prototype.render = function () {
 }
 
 Player.prototype.handleInput = function (direction) {
+  // When this function is called it is passed an argument, and depending on
+  // the argument a function is returned from the object and stored in the
+  // "movePlayer" variable. A function is only returned if the argument exists
+  // as a key within the object. "movePlayer" is then checked to see if is truthy,
+  // if so the function stored in "movePlayer" is then called. 
   const movePlayer = {
     left: () => {
       this.x > 0 ? this.x -= 100.1 : null
